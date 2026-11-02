@@ -25,6 +25,12 @@ interface PecaOpcao {
         </div>
       }
 
+      @if (sucessoMensagem()) {
+        <div style="background-color: #d4edda; color: #155724; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-weight: 500;" role="status">
+          {{ sucessoMensagem() }}
+        </div>
+      }
+
       <!-- Formulário de Cadastro -->
       <form (submit)="salvar($event)" style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 5px solid #8F3B27; margin-bottom: 30px;">
         
@@ -94,10 +100,12 @@ export class NovoPedidoComponent {
   medidas = '';
   prazoEntregaStr = '';
   precoCalculado: number = 0;
+  
   erroMensagem = signal<string | null>(null);
+  sucessoMensagem = signal<string | null>(null);
 
   listaPecas: PecaOpcao[] = [
-    { id: 'bolsa-malha', nome: 'Bolsa de Fio de Malha',preco: 150.00 },
+    { id: 'bolsa-malha', nome: 'Bolsa de Fio de Malha', preco: 150.00 },
     { id: 'tapete-cru', nome: 'Tapete Geométrico Cru', preco: 120.00 },
     { id: 'amigurumi', nome: 'Amigurumi Personalizado', preco: 90.00 }
   ];
@@ -109,6 +117,7 @@ export class NovoPedidoComponent {
 
   salvar(event: Event): void {
     event.preventDefault();
+    this.sucessoMensagem.set(null);
 
     if (!this.clienteNome.trim()) {
       this.erroMensagem.set('Informe o nome do cliente');
@@ -160,6 +169,9 @@ export class NovoPedidoComponent {
       criadoEm: new Date(),
       atualizadoEm: new Date()
     });
+
+    // Feedback visual imediato de sucesso
+    this.sucessoMensagem.set('Pedido registado e guardado com sucesso!');
 
     // Limpar formulário após sucesso
     this.clienteNome = '';
