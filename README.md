@@ -23,5 +23,5 @@ Desenvolvido para atender a realidade de produção artesanal (como o trabalho a
 
 1. **Clonar o repositório:**
    ```bash
-   git clone [https://github.com/seu-usuario/atelie-organizado.git](https://github.com/IngridVih/atelie-organizado.git)
+   git clone [https://github.com/IngridVih/atelie-organizado.git](https://github.com/IngridVih/atelie-organizado.git)
    cd atelie-organizado
