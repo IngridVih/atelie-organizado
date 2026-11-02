@@ -14,7 +14,6 @@ export class EstoqueService {
    * Soma materiais repetidos na composição antes da verificação.
    */
   verificarEBaixarEstoque(composicao: ItemComposicaoPeca[], materiaisAtuais: Material[]): Material[] {
-    // 1. Consolidar materiais repetidos na composição
     const mapaNecessidade = new Map<string, number>();
     for (const item of composicao) {
       const atual = mapaNecessidade.get(item.materialId) || 0;
@@ -24,7 +23,6 @@ export class EstoqueService {
     const materiaisFaltantes: Array<{ materialId: string; necessario: number; disponivel: number }> = [];
     const mapaEstoque = new Map<string, Material>(materiaisAtuais.map(m => [m.id, { ...m }]));
 
-    // 2. Verificar disponibilidade de cada material consolidado
     for (const [materialId, necessario] of mapaNecessidade.entries()) {
       const material = mapaEstoque.get(materialId);
       const disponivel = material ? material.quantidade : 0;
@@ -38,12 +36,10 @@ export class EstoqueService {
       }
     }
 
-    // 3. Se faltar qualquer material, lança erro de domínio e não altera nada
     if (materiaisFaltantes.length > 0) {
       throw new EstoqueInsuficienteError(materiaisFaltantes);
     }
 
-    // 4. Executar a baixa com sucesso (tudo ou nada)
     for (const [materialId, necessario] of mapaNecessidade.entries()) {
       const material = mapaEstoque.get(materialId)!;
       material.quantidade = Math.round((material.quantidade - necessario) * 100) / 100;
@@ -55,5 +51,12 @@ export class EstoqueService {
 
   verificarAlertaSaldoBaixo(material: Material): boolean {
     return material.quantidade <= material.estoqueMinimo;
+  }
+
+  /**
+   * Filtra e retorna todos os materiais que estão com o saldo abaixo ou igual ao mínimo.
+   */
+  obterMateriaisComEstoqueBaixo(materiais: Material[]): Material[] {
+    return materiais.filter(m => this.verificarAlertaSaldoBaixo(m));
   }
 }
