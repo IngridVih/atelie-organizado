@@ -5,7 +5,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../dados/auth';
+import { AvisoService } from '../../servicos/aviso.service';
 
 @Component({
   selector: 'app-login',
@@ -82,6 +82,7 @@ import { AuthService } from '../../dados/auth';
       width: 100%;
       max-width: 400px;
       border-top: 6px solid #8F3B27;
+      font-family: sans-serif;
     }
     h1 {
       color: #2B2320;
@@ -163,8 +164,8 @@ import { AuthService } from '../../dados/auth';
   `]
 })
 export class LoginComponent {
-  private authService = inject(AuthService);
   private router = inject(Router);
+  private avisoService = inject(AvisoService);
 
   email = '';
   senha = '';
@@ -173,12 +174,19 @@ export class LoginComponent {
 
   entrar(event: Event): void {
     event.preventDefault();
-    // Mensagem de erro genérica padrão OWASP anti-enumeração
-    this.erroMensagem.set('E-mail ou senha incorretos');
+    if (!this.email || !this.senha) {
+      this.erroMensagem.set('Por favor, preencha todos os campos.');
+      return;
+    }
+    
+    localStorage.setItem('atelie_usuario', this.email);
+    this.avisoService.mostrar('Login efetuado com sucesso!');
+    this.router.navigate(['/pedidos']);
   }
 
   entrarDemo(): void {
-    this.authService.fazerLoginDemo();
-    this.router.navigate(['/inicio']);
+    localStorage.setItem('atelie_usuario', 'demo@atelie.com');
+    this.avisoService.mostrar('Bem-vinda ao modo demonstração!');
+    this.router.navigate(['/pedidos']);
   }
 }
