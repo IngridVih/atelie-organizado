@@ -25,3 +25,14 @@ Desenvolvido para atender a realidade de produção artesanal (como o trabalho a
    ```bash
    git clone [https://github.com/IngridVih/atelie-organizado.git](https://github.com/IngridVih/atelie-organizado.git)
    cd atelie-organizado
+
+---
+
+## 🔑 Acesso ao Sistema (Login)
+
+Para testar o **Ateliê Organizado**, podes aceder utilizando as credenciais de teste abaixo ou utilizar o modo de demonstração:
+
+* **E-mail:** `vitoria@atelie.com`
+* **Senha:** `atelie2026`
+
+> **Nota:** Se preferires saltar a autenticação manual, clica no botão **"Acessar Modo Demonstração"** na tela de login para ir diretamente para o painel de pedidos.
