@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Função auxiliar para verificar autenticação
+    function estaAutenticado() {
+      return request.auth != null;
+    }
+
+    // Função para verificar se o usuário é o dono do registro
+    function eDono(donoId) {
+      return estaAutenticado() && request.auth.uid == donoId;
+    }
+
+    // Regras para Clientes
+    match /clientes/{clienteId} {
+      allow read, write: if eDono(resource.data.donoId) || (request.method == 'create' && eDono(request.resource.data.donoId));
+    }
+
+    // Regras para Materiais
+    match /materiais/{materialId} {
+      allow read, write: if eDono(resource.data.donoId) || (request.method == 'create' && eDono(request.resource.data.donoId));
+    }
+
+    // Regras para Peças e subcoleção privada de custos (ficha)
+    match /pecas/{pecaId} {
+      allow read, write: if eDono(resource.data.donoId) || (request.method == 'create' && eDono(request.resource.data.donoId));
+      
+      match /custos/ficha {
+        allow read, write: if estaAutenticado();
+      }
+    }
+
+    // Regras para Pedidos
+    match /pedidos/{pedidoId} {
+      allow read, write: if eDono(resource.data.donoId) || (request.method == 'create' && eDono(request.resource.data.donoId));
+    }
+  }
+}
