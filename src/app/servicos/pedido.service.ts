@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Pedido, SituacaoPedido } from '../dominio/modelos';
+import { TransicaoSituacaoInvalidaError } from '../dominio/modelos';
 
 @Injectable({
   providedIn: 'root'
@@ -42,12 +43,12 @@ export class PedidoService {
     this.pedidos.update(lista => [pedidoCompleto, ...lista]);
   }
 
-  avancarSituacao(pedido: Pedido): SituacaoPedido {
-    const fluxo: SituacaoPedido[] = ['aguardando', 'em_producao', 'entregue'];
-    const index = fluxo.indexOf(pedido.situacao);
-    if (index >= 0 && index < fluxo.length - 1) {
-      return fluxo[index + 1];
-    }
-    throw new Error('Transição inválida');
+avancarSituacao(pedido: Pedido): SituacaoPedido {
+  if (pedido.situacao === 'aguardando') {
+    return 'em_producao';
+  } else if (pedido.situacao === 'em_producao') {
+    return 'entregue';
   }
+
+throw new TransicaoSituacaoInvalidaError('aguardando', 'entregue');}
 }
