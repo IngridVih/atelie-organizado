@@ -7,54 +7,62 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <main class="calculadora-container" style="max-width: 600px; margin: 40px auto; font-family: sans-serif;">
-      <h2>Calculadora de Precificação 💡</h2>
+    <main class="calculadora-container" style="max-width: 700px; margin: 30px auto; font-family: sans-serif; font-size: 1rem;">
+      <h2 style="color: #8F3B27; margin-bottom: 20px; font-size: 1.5rem;">Cálculo de Preço <span aria-hidden="true">💡</span></h2>
       
-      <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
-        <label style="display: block; margin-bottom: 8px;">
-          Custo dos Materiais (R$):
-          <input type="number" [(ngModel)]="custoMateriais" style="width: 100%; padding: 8px; margin-top: 4px;" />
-        </label>
+      <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 5px solid #8F3B27; margin-bottom: 30px;">
+        
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #2B2320; font-size: 1rem;">Custo dos Materiais (R$):</label>
+          <input type="number" [(ngModel)]="custoMateriais" placeholder="" style="width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 1rem; min-height: 44px;" />
+        </div>
 
-        <label style="display: block; margin-bottom: 8px;">
-          Horas Gastas na Peça:
-          <input type="number" [(ngModel)]="horasGastas" style="width: 100%; padding: 8px; margin-top: 4px;" />
-        </label>
+        <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+          <div style="flex: 1;">
+            <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #2B2320; font-size: 1rem;">Horas Gastas:</label>
+            <input type="number" [(ngModel)]="horasGastas" placeholder="" style="width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 1rem; min-height: 44px;" />
+          </div>
+          <div style="flex: 1;">
+            <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #2B2320; font-size: 1rem;">Valor da Hora (R$):</label>
+            <input type="number" [(ngModel)]="valorHora" placeholder="" style="width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 1rem; min-height: 44px;" />
+          </div>
+        </div>
 
-        <label style="display: block; margin-bottom: 8px;">
-          Valor da Hora de Trabalho (R$):
-          <input type="number" [(ngModel)]="valorHora" style="width: 100%; padding: 8px; margin-top: 4px;" />
-        </label>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #2B2320; font-size: 1rem;">Margem de Lucro Desejada (&#37;):</label>
+          <input type="number" [(ngModel)]="margemLucro" placeholder="" style="width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 1rem; min-height: 44px;" />
+        </div>
 
-        <label style="display: block; margin-bottom: 16px;">
-          Margem de Lucro Desejada (&#37;):
-          <input type="number" [(ngModel)]="margemLucro" style="width: 100%; padding: 8px; margin-top: 4px;" />
-        </label>
-
-        <button (click)="calcular()" style="background: #6200ee; color: white; border: none; padding: 10px 16px; border-radius: 4px; cursor: pointer; width: 100%;">
+        <button (click)="calcular()" style="width: 100%; background: #8F3B27; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; min-height: 44px; font-size: 1rem;">
           Calcular Preço Ideal
         </button>
       </div>
 
-      <div *ngIf="precoFinal() > 0" style="background: #e8f5e9; border: 1px solid #c8e6c9; padding: 16px; border-radius: 8px; text-align: center;">
-        <h3>Preço Sugerido de Venda:</h3>
-        <p style="font-size: 24px; font-weight: bold; color: #2e7d32;">R$ {{ precoFinal().toFixed(2) }}</p>
-      </div>
+      @if (precoFinal() > 0) {
+        <div style="background: #ffffff; border-left: 5px solid #28a745; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 6px rgba(43, 35, 32, 0.08);">
+          <h3 style="color: #2B2320; margin: 0 0 8px 0; font-size: 1.1rem;">Preço Sugerido de Venda:</h3>
+          <p style="font-size: 28px; font-weight: bold; color: #28a745; margin: 0;">R$ {{ precoFinal().toFixed(2).replace('.', ',') }}</p>
+        </div>
+      }
     </main>
   `
 })
 export class CalculadoraPrecoComponent {
-  custoMateriais: number = 0;
-  horasGastas: number = 0;
-  valorHora: number = 15;
-  margemLucro: number = 30;
+  custoMateriais: number | null = null;
+  horasGastas: number | null = null;
+  valorHora: number | null = null;
+  margemLucro: number | null = null;
 
   precoFinal = signal<number>(0);
 
   calcular(): void {
-    const custoTempo = this.horasGastas * this.valorHora;
-    const custoTotal = this.custoMateriais + custoTempo;
-    const lucro = custoTotal * (this.margemLucro / 100);
-    this.precoFinal.set(custoTotal + lucro);
+    const materiais = this.custoMateriais ?? 0;
+    const horas = this.horasGastas ?? 0;
+    const vHora = this.valorHora ?? 0;
+    const margem = this.margemLucro ?? 0;
+
+    const custoTotal = materiais + (horas * vHora);
+    const precoCalculado = custoTotal * (1 + (margem / 100));
+    this.precoFinal.set(Number(precoCalculado.toFixed(2)));
   }
 }
