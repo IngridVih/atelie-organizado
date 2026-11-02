@@ -1,6 +1,3 @@
-/**
- * Componente de cartão individual de pedido com ações rápidas otimizadas para toque com uma mão.
- */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Pedido } from '../../dominio/modelos';
@@ -20,22 +17,33 @@ import { formatarDataBrasileira } from '../../dominio/datas';
       </header>
 
       <div class="cartao-corpo">
-        <h3>Cor: {{ pedido.cor }}</h3>
-        <p class="preco">R$ {{ pedido.precoCalculado.toFixed(2).replace('.', ',') }}</p>
+        <h3 style="font-size: 1.1rem; color: #2B2320; margin: 0 0 0.4rem 0;">Cliente: {{ pedido.clienteId }}</h3>
+        <p style="margin: 0 0 0.3rem 0; font-size: 0.95rem; color: #495057;"><strong>Peça:</strong> {{ pedido.pecaId }}</p>
+        <p style="margin: 0 0 0.3rem 0; font-size: 0.95rem; color: #495057;"><strong>Cor:</strong> {{ pedido.cor }}</p>
         @if (pedido.medidas) {
-          <p class="medidas">Medidas: {{ pedido.medidas }}</p>
+          <p style="margin: 0 0 0.3rem 0; font-size: 0.95rem; color: #495057;"><strong>Medidas:</strong> {{ pedido.medidas }}</p>
         }
+        <p class="preco" style="font-size: 1.2rem; font-weight: bold; color: #8F3B27; margin: 0.5rem 0;">R$ {{ pedido.precoCalculado.toFixed(2).replace('.', ',') }}</p>
       </div>
 
       <footer class="cartao-footer">
-        @if (pedido.situacao !== 'entregue') {
+        @if (pedido.situacao === 'aguardando') {
           <button 
             type="button" 
             class="btn-avancar" 
             (click)="onAvancar.emit(pedido)"
-            aria-label="Avançar situação do pedido"
+            aria-label="Iniciar produção do pedido"
           >
-            {{ pedido.situacao === 'aguardando' ? 'Iniciar Produção' : 'Concluir Entrega' }}
+            Iniciar produção
+          </button>
+        } @else if (pedido.situacao === 'em_producao') {
+          <button 
+            type="button" 
+            class="btn-avancar" 
+            (click)="onAvancar.emit(pedido)"
+            aria-label="Concluir entrega do pedido"
+          >
+            Concluir entrega
           </button>
         }
       </footer>
@@ -52,7 +60,7 @@ import { formatarDataBrasileira } from '../../dominio/datas';
     }
     .cartao-pedido.entregue {
       border-left-color: #28a745;
-      opacity: 0.85;
+      opacity: 0.9;
     }
     .cartao-header {
       display: flex;
@@ -61,7 +69,7 @@ import { formatarDataBrasileira } from '../../dominio/datas';
       margin-bottom: 0.75rem;
     }
     .badge {
-      padding: 0.25rem 0.5rem;
+      padding: 0.3rem 0.6rem;
       border-radius: 4px;
       font-size: 0.75rem;
       font-weight: bold;
@@ -71,24 +79,8 @@ import { formatarDataBrasileira } from '../../dominio/datas';
     .badge.em_producao { background-color: #17a2b8; color: #ffffff; }
     .badge.entregue { background-color: #28a745; color: #ffffff; }
     .prazo {
-      font-size: 0.85rem;
-      color: #6c757d;
-    }
-    .cartao-corpo h3 {
-      font-size: 1.1rem;
-      color: #2B2320;
-      margin: 0 0 0.5rem 0;
-    }
-    .preco {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #8F3B27;
-      margin: 0 0 0.5rem 0;
-    }
-    .medidas {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #495057;
-      margin: 0;
     }
     .cartao-footer {
       margin-top: 1rem;
@@ -101,7 +93,7 @@ import { formatarDataBrasileira } from '../../dominio/datas';
       border: none;
       padding: 0.6rem 1rem;
       border-radius: 6px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: bold;
       cursor: pointer;
       min-height: 44px;
@@ -123,7 +115,7 @@ export class CartaoPedidoComponent {
   obterTextoSituacao(situacao: string): string {
     switch (situacao) {
       case 'aguardando': return 'Aguardando';
-      case 'em_producao': return 'Em Produção';
+      case 'em_producao': return 'Em produção';
       case 'entregue': return 'Entregue';
       default: return situacao;
     }

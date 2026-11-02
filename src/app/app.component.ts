@@ -16,10 +16,10 @@ import { filter } from 'rxjs/operators';
         <header style="background: #8F3B27; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <h1 style="color: white; font-size: 1.2rem; margin: 0;">Ateliê Organizado 🧶</h1>
           <nav style="display: flex; gap: 16px; align-items: center;">
-            <a routerLink="/pedidos" style="color: white; text-decoration: none; font-weight: bold; font-size: 0.95rem;">Pedidos</a>
-            <a routerLink="/materiais" style="color: white; text-decoration: none; font-weight: bold; font-size: 0.95rem;">Materiais</a>
-            <a routerLink="/preco" style="color: white; text-decoration: none; font-weight: bold; font-size: 0.95rem;">Calculadora</a>
-            <a routerLink="/login" style="background: #722e1e; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.85rem;">Sair</a>
+            <a routerLink="/pedidos" style="color: white; text-decoration: none; font-weight: bold; font-size: 1rem; min-height: 44px; display: flex; align-items: center; padding: 0 8px;">Pedidos</a>
+            <a routerLink="/materiais" style="color: white; text-decoration: none; font-weight: bold; font-size: 1rem; min-height: 44px; display: flex; align-items: center; padding: 0 8px;">Materiais</a>
+            <a routerLink="/preco" style="color: white; text-decoration: none; font-weight: bold; font-size: 1rem; min-height: 44px; display: flex; align-items: center; padding: 0 8px;">Preço</a>
+            <a routerLink="/login" style="background: #722e1e; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-size: 0.9rem; min-height: 44px; display: flex; align-items: center;">Sair</a>
           </nav>
         </header>
       }
